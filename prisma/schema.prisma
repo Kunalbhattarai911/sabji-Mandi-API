@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Storage {
+  id                  String      @id @default(uuid())
+  location            String      @unique
+  capacityKg          Int
+  remainingCapacityKg Int         @default(0)
+  vegetableCount      Int         @default(0)
+  createdAt           DateTime    @default(now())
+  Vegetables          Vegetable[]
+  Purchases           Purchase[]
+}
+
+model Vegetable {
+  id         String     @id @default(uuid())
+  name       String     @unique
+  quantityKg Int
+  pricePerKg Float
+  storageId  String
+  storage    Storage    @relation(fields: [storageId], references: [id], onDelete: Cascade)
+  createdAt  DateTime   @default(now())
+  Purchases  Purchase[]
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  Purchases Purchase[]
+}
+
+model Purchase {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  vegetableId String
+  vegetable   Vegetable @relation(fields: [vegetableId], references: [id])
+  storageId   String
+  storage     Storage   @relation(fields: [storageId], references: [id])
+  quantityKg  Int
+  totalPrice  Float
+  createdAt   DateTime  @default(now())
+}
