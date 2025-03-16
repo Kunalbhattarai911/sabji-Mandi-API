@@ -67,6 +67,7 @@ export const getBuyData = expressAsyncHandler(async (req, res, next) => {
     }
   })
 
+  //total amount of purchase
   const total = getBuyData.Purchases.map((item, i) => {
     return item.totalPrice;
   }).reduce((pre, cur) => {

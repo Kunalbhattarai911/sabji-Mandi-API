@@ -9,6 +9,7 @@ export const addVegetable = expressAsyncHandler(async (req, res, next) => {
   const findVegetable = await Prisma.vegetable.findFirst({
     where: {
       name: name.toLowerCase(),
+      storageId : storageId
     },
   });
 

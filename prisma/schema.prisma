@@ -27,13 +27,15 @@ model Storage {
 
 model Vegetable {
   id         String     @id @default(uuid())
-  name       String     @unique
+  name       String    
   quantityKg Int
   pricePerKg Float
   storageId  String
   storage    Storage    @relation(fields: [storageId], references: [id], onDelete: Cascade)
   createdAt  DateTime   @default(now())
   Purchases  Purchase[]
+
+@@unique([name, storageId])
 }
 
 model User {
